@@ -1,16 +1,21 @@
-﻿@{
-    ViewData["Title"] = "To Do List - Create";
+﻿@model ToDoApp.Models.Item
+
+@{
+    ViewData["Title"] = "Item - Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model ToDoApp.Models.Item
-
-<h2>Create</h2>
+<h2>Create a new item</h2>
 <hr />
-<h4>Add a new task</h4>
+
 @using (Html.BeginForm())
 {
     @Html.LabelFor(model => model.Description)
-    @Html.TextBoxFor(model => model.Description)
-    <input type="submit" value="Add new task" />
+    @Html.EditorFor(model => model.Description)
+
+    @Html.LabelFor(model => model.CategoryId)
+    @Html.DropDownList("CategoryId")
+
+    <input type="submit" value="Create" class="btn btn-default" />
 }
-<p>@Html.ActionLink("Back to list", "Index")</p>
+
+@Html.ActionLink("Back to List", "Index")
