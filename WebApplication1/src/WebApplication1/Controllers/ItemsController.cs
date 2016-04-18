@@ -37,6 +37,7 @@ namespace ToDoApp.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
         public IActionResult Edit(int id)
         {
             var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
@@ -65,5 +66,15 @@ namespace ToDoApp.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        public IActionResult ToggleDone(int id)
+        {
+            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
+            thisItem.Done = !thisItem.Done;
+            db.Entry(thisItem).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
     }
 }

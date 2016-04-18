@@ -13,5 +13,6 @@ namespace ToDoApp.Models
         [Key]
         public int ItemId { get; set; }
         public string Description { get; set; }
+        public bool Done { get; set; }
     }
 }
