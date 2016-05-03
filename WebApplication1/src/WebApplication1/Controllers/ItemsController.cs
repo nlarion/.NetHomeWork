@@ -14,15 +14,30 @@ namespace ToDoApp.Controllers
     public class ItemsController : Controller
     {
         private ToDoAppContext db = new ToDoAppContext();
+        private IItemRepository itemRepo;
 
-        public IActionResult Index()
+        public ItemsController(IItemRepository thisRepo = null)
         {
-            return View(db.Items.Include(x => x.Category).ToList());
+            if (thisRepo == null)
+            {
+                this.itemRepo = new EFItemRepository();
+            }
+            else
+            {
+                this.itemRepo = thisRepo;
+            }
+        }
+
+        public ViewResult Index()
+        {
+            return View(itemRepo.Items.ToList());
+            //return View(itemRepo.Items.Include(x => x.Category).ToList());
+
         }
 
         public IActionResult Details(int id)
         {
-            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
+            var thisItem = itemRepo.Items.FirstOrDefault(x => x.ItemId == id);
             return View(thisItem);
         }
 
@@ -35,14 +50,13 @@ namespace ToDoApp.Controllers
         [HttpPost]
         public ActionResult Create(Item item)
         {
-            db.Items.Add(item);
-            db.SaveChanges();
+            itemRepo.Save(item);
             return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int id)
         {
-            var thisItem = db.Items.FirstOrDefault(d => d.ItemId == id);
+            Item thisItem = itemRepo.Items.FirstOrDefault(x => x.ItemId == id);
             ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View(thisItem);
         }
@@ -50,23 +64,21 @@ namespace ToDoApp.Controllers
         [HttpPost]
         public ActionResult Edit(Item item)
         {
-            db.Entry(item).State = EntityState.Modified;
-            db.SaveChanges();
+            itemRepo.Edit(item);
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
-            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
+            Item thisItem = itemRepo.Items.FirstOrDefault(x => x.ItemId == id);
             return View(thisItem);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
-            db.Items.Remove(thisItem);
-            db.SaveChanges();
+            Item thisItem = itemRepo.Items.FirstOrDefault(x => x.ItemId == id);
+            itemRepo.Remove(thisItem);
             return RedirectToAction("Index");
         }
 
