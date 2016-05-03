@@ -8,6 +8,7 @@ namespace ToDoApp.Models
 {
     public class EFItemRepository : IItemRepository
     {
+        ToDoAppContext db = new ToDoAppContext();
         public EFItemRepository(ToDoAppContext connection = null)
         {
             if (connection == null)
@@ -19,8 +20,6 @@ namespace ToDoApp.Models
                 this.db = connection;
             }
         }
-
-        ToDoAppContext db = new ToDoAppContext();
 
         public IQueryable<Item> Items
         { get { return db.Items; } }
@@ -42,6 +41,15 @@ namespace ToDoApp.Models
         public void Remove(Item item)
         {
             db.Items.Remove(item);
+            db.SaveChanges();
+        }
+
+        public void DeleteAll()
+        {
+            foreach (Item item in db.Items)
+            {
+                db.Items.Remove(item);
+            }
             db.SaveChanges();
         }
     }

@@ -17,6 +17,7 @@ namespace WebApplication1.Tests
 
         Mock<IItemRepository> mock = new Mock<IItemRepository>();
         EFItemRepository db = new EFItemRepository(new TestDbContext());
+        EFCategoryRepository db2 =  new EFCategoryRepository(new TestDbContext());
         private void DbSetup()
         {
             Category MyCategory = new Category { CategoryId = 1, Name = "Sweet" };
@@ -79,9 +80,15 @@ namespace WebApplication1.Tests
         {
             // Arrange
             ItemsController controller = new ItemsController(db);
+            CategoryController controller2 = new CategoryController(db2);
+            Category testCategory = new Category();
+            testCategory.Name = "Test Category";
+            controller2.Create(testCategory);
             Item testItem = new Item();
             testItem.Description = "TestDb Item";
-            testItem.CategoryId = 1;
+
+            testItem.CategoryId = testCategory.CategoryId;
+            testItem.Category = testCategory;
 
             // Act
             controller.Create(testItem);
@@ -93,7 +100,7 @@ namespace WebApplication1.Tests
 
         public void Dispose()
         {
-            Item.DeleteAll();
+            db.DeleteAll();
         }
     }
 }

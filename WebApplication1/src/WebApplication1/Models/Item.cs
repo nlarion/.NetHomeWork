@@ -34,10 +34,5 @@ namespace ToDoApp.Models
         {
             return this.ItemId.GetHashCode();
         }
-
-        public static void DeleteAll()
-        {
-
-        }
     }
 }

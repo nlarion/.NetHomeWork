@@ -9,6 +9,7 @@ namespace ToDoApp.Models
     public class TestDbContext : ToDoAppContext
     {
         public override DbSet<Item> Items { get; set; }
+        public override DbSet<Category> Categories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
